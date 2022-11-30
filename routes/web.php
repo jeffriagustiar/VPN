@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaketController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,9 +22,10 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::group(['middleware' => ['role:admin']], function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home-admin');
+    Route::get('/home_admin', [HomeController::class, 'index'])->name('home-admin');
+    Route::get('/paket', [PaketController::class, 'index'])->name('list-paket');
 });
 
 Route::group(['middleware' => ['role:user']], function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home-user');
+    Route::get('/home_user', [HomeController::class, 'index_user'])->name('home-user');
 });
