@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaketController;
+use App\Http\Controllers\VpnController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,4 +35,11 @@ Route::group(['middleware' => ['role:admin']], function () {
 
 Route::group(['middleware' => ['role:user']], function () {
     Route::get('/home_user', [HomeController::class, 'index_user'])->name('home-user');
+
+    //VPN
+    Route::get('/vpn', [VpnController::class, 'index'])->name('list-vpn');
+    Route::get('/get-vpn', [VpnController::class, 'show']);
+    Route::post('/add-vpn', [VpnController::class, 'store']);
+    Route::post('/update-vpn/{id}', [VpnController::class, 'edit']);
+    Route::delete('/delete-vpn/{id}', [VpnController::class, 'destroy']);
 });

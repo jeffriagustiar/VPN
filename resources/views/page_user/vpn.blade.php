@@ -1,28 +1,32 @@
-@extends('layouts.appAdmin')
+@extends('layouts.appUser')
 
 @section('title')
-Paket
+VPN
 @endsection
 
 @section('content')
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-11">
             <div class="card">
-                <div class="card-header">{{ __('List Paket') }}</div>
+                <div class="card-header">{{ __('List VPN') }}</div>
 
                 <div class="card-body">
                     <div class="col-sm-4">
                         <a href="#" class="btn btn-primary" id="addData">Add Data</a>
                     </div><br>
-                    <table id="paketTable" class="table table-striped" style="width:100%">
+                    <table id="vpnTable" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Nama</th>
-                                <th>Deskripsi</th>
-                                <th>Lama</th>
-                                <th>Test</th>
+                                <th>Nama VPN</th>
+                                <th>Nama User</th>
+                                <th>Nama Paket</th>
+                                <th>IP</th>
+                                <th>Port</th>
+                                <th>Bayar</th>
+                                <th>Tanggal Aktif</th>
+                                <th>Tanggal Non Aktif</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -31,10 +35,14 @@ Paket
                         </tbody> --}}
                         <tfoot>
                             <tr>
-                                <th>Nama</th>
-                                <th>Deskripsi</th>
-                                <th>Lama</th>
-                                <th>Test</th>
+                                <th>Nama VPN</th>
+                                <th>Nama User</th>
+                                <th>Nama Paket</th>
+                                <th>IP</th>
+                                <th>Port</th>
+                                <th>Bayar</th>
+                                <th>Tanggal Aktif</th>
+                                <th>Tanggal Non Aktif</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>
@@ -50,48 +58,30 @@ Paket
     <div class="modal-dialog modal-m modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addData">Add Data User</h5>
+          <h5 class="modal-title" id="addData">Add new VPN</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form id="postData" name="postData" class="form-horizontal form" >
   
             <div class="mb-3 row">
-              <label class="col-sm-2 control-label">Name</label>
+              <label class="col-sm-2 control-label">Nama VPN</label>
               <div class="col-lg-12">
                 <div class="input-group">
                     <input type="hidden" name="id">
-                  <input type="text" class="form-control" id="nama" name="nama" placeholder="Enter Nama Paket" value="" >
+                  <input type="text" class="form-control" id="nama_vpn" name="nama_vpn" placeholder="Enter Nama VPN" value="" >
                 </div>
               </div>
             </div>
 
             <div class="mb-3 row">
-                <label class="col-sm-2 control-label">Lama</label>
+                <label class="col-sm-2 control-label">Paket</label>
                 <div class="col-lg-12">
                   <div class="input-group">
-                    <input type="text" class="form-control" id="lama" name="lama" placeholder="Enter Lama" value="" >
+                    <input type="text" class="form-control" id="id_paket" name="id_paket" placeholder="Enter Paket" value="" >
                   </div>
                 </div>
               </div>
-
-              <div class="mb-3 row">
-                  <label class="col-sm-2 control-label">Desc</label>
-                  <div class="col-lg-12">
-                    <div class="input-group">
-                      <input type="text" class="form-control" id="desc" name="desc" placeholder="Enter Desc" value="" >
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mb-3 row">
-                    <label class="col-sm-2 control-label">Test</label>
-                    <div class="col-lg-12">
-                      <div class="input-group">
-                        <input type="text" class="form-control" id="test" name="test" placeholder="Enter Test" value="" >
-                      </div>
-                    </div>
-                  </div>
             
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -120,15 +110,19 @@ Paket
         var modal = $('.modalEdit')
         var form = $('#postData')
 
-        var paket = $('#paketTable').DataTable({
+        var vpn = $('#vpnTable').DataTable({
             processing: true,
             serverside: true,
-            ajax: '/get-paket',
+            ajax: '/get-vpn',
             columns: [
-                {data: 'nama', name: 'nama'},
-                {data: 'desc', name: 'desc'},
-                {data: 'lama', name: 'lama'},
-                {data: 'test', name: 'test'},
+                {data: 'nama_vpn', name: 'nama_vpn'},
+                {data: 'id_user', name: 'id_user'},
+                {data: 'id_paket', name: 'id_paket'},
+                {data: 'ip', name: 'ip'},
+                {data: 'port', name: 'port'},
+                {data: 'bayar', name: 'bayar'},
+                {data: 'tgl_activ', name: 'tgl_activ'},
+                {data: 'tgl_inactiv', name: 'tgl_inactiv'},
                 {data: 'action', name: 'action'},
             ]
         });
@@ -142,15 +136,16 @@ Paket
         });
 
         $('#savedata').click(function (){
+          console.log('a');
             $.ajax({
                 data: form.serialize(),
-                url: '/add-paket',
+                url: '/add-vpn',
                 type: "post",
                 dataType: 'json',
                 success: function(data){
-                    form.trigger("reset");
-                    modal.modal('hide');
-                    paket.ajax.reload();
+                  $('$postData').trigger("reset");
+                  $('$addDataModal').modal('hide');
+                  vpn.ajax.reload();
                 },
                 error: function(data){
                     console.log('Error : ',data);
@@ -165,13 +160,11 @@ Paket
             $('#savedata').hide();
 
             modal.find('.modal-title').text('Update Data');
-            var data= paket.row($(this).parents('tr')).data()
+            var data= vpn.row($(this).parents('tr')).data()
 
             form.find('input[name="id"]').val(data.id)
-            form.find('input[name="nama"]').val(data.nama)
-            form.find('input[name="lama"]').val(data.lama)
-            form.find('input[name="desc"]').val(data.desc)
-            form.find('input[name="test"]').val(data.test)
+            form.find('input[name="nama_vpn"]').val(data.nama_vpn)
+            form.find('input[name="id_paket"]').val(data.id_paket)
         });
 
         $('#savedataedit').click(function(){
@@ -180,11 +173,11 @@ Paket
                 type:"POST",
                 data: form.serialize(),
                 dataType: 'json',
-                url: '/update-paket/'+id,
+                url: '/update-vpn/'+id,
                 success: function(data){
-                    form.trigger("reset");
-                    modal.modal('hide');
-                    paket.ajax.relod();
+                  $('$postData').trigger("reset");
+                  $('$addDataModal').modal('hide');
+                  vpn.ajax.relod();
                 },
                 error: function(data){
                     console.log('Error : ',data);
@@ -196,9 +189,9 @@ Paket
             var id = $(this).data("id");
             $.ajax({
                 type: "DELETE",
-                url: '/delete-paket/'+id,
+                url: '/delete-vpn/'+id,
                 success : function (data){
-                    paket.ajax.reload()
+                    vpn.ajax.reload()
                     console.log("success")
                 },
                 error: function (data){

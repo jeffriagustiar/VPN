@@ -79,7 +79,6 @@
             </nav>
             
             <main class="py-4">
-            @include('includes.menuAdmin')
             @yield('content')
         </main>
     </div>
