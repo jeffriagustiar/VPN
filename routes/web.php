@@ -23,7 +23,13 @@ Auth::routes();
 
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('/home_admin', [HomeController::class, 'index'])->name('home-admin');
+
+    //Paket
     Route::get('/paket', [PaketController::class, 'index'])->name('list-paket');
+    Route::get('/get-paket', [PaketController::class, 'show']);
+    Route::post('/add-paket', [PaketController::class, 'store']);
+    Route::post('/update-paket/{id}', [PaketController::class, 'edit']);
+    Route::delete('/delete-paket/{id}', [PaketController::class, 'destroy']);
 });
 
 Route::group(['middleware' => ['role:user']], function () {

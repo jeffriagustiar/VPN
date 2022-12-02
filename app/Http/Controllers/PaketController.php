@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaketModel;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class PaketController extends Controller
 {
@@ -40,7 +42,7 @@ class PaketController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        PaketModel::create($request->all());
     }
 
     /**
@@ -49,9 +51,35 @@ class PaketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
+        $paket = PaketModel::all();
+
+        return DataTables::of($paket)
+            ->addIndexColumn()
+            ->addColumn('action', function($item){
+                $a = ' 
+                <a 
+                    href="javascript:void(0)" 
+                    data-toggle="tooltip"  
+                    data-id="'.$item->id.'" 
+                    data-original-title="Delete" 
+                    class="btn btn-danger deleteData"
+                    >Delete
+                    <i class="fa fa-trash-o"></i>
+                </a>
+                <a 
+                    href="javascript:void(0)" 
+                    data-toggle="tooltip"  
+                    data-id="'.$item->id.'" 
+                    data-original-title="Look" 
+                    class="btn btn-warning lookData">
+                    Edit
+                    <i class="fa fa-search"></i>
+                </a>';
+                return $a;
+            })
+            ->make(true);
     }
 
     /**
@@ -60,9 +88,10 @@ class PaketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
-        //
+        $update = PaketModel::find($id);
+        $update->update($request->all());
     }
 
     /**
@@ -85,6 +114,7 @@ class PaketController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = PaketModel::find($id);
+        $data->delete();
     }
 }
